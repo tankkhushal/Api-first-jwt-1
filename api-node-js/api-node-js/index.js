@@ -2,7 +2,7 @@ const express = require('express');
 
 const port = 8001;
 const app = express();
-
+const path = require('path')
 const db = require ("./config/mongoose")
 const passport = require("passport")
 const jwtpassport = require("./config/passport_jwt_strategy");
@@ -10,6 +10,7 @@ const session = require("express-session");
 
 
 app.use(express.urlencoded());
+app.use('/uploads',express.static(path.join(__dirname,'uploads')))
 
 app.use(session({
     name:"khushal",
@@ -23,7 +24,6 @@ app.use(session({
 
 app.use(passport.initialize())
 app.use(passport.session());
-
 
 
 app.use("/", require('./router'));

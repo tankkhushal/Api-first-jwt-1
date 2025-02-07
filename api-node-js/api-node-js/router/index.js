@@ -6,6 +6,9 @@ const passport = require ("passport")
 
 const homectl = require ("../controller/homectl")
 
+const usermodel = require ("../model/usermodel")
+
+const path = require('path')
 
 route.get("/getData",passport.authenticate("jwt",{failureRedirect:"/unauth"}),homectl.getData);
 
@@ -13,7 +16,7 @@ route.get("/unauth",async (req,res)=>{
     return res.status(400).json({msg:"are you not authenticate"})
 })
 
-route.post("/insertData",passport.authenticate("jwt",{failureRedirect:"/unauth"}),homectl.insertData);
+route.post("/insertData",passport.authenticate("jwt",{failureRedirect:"/unauth"}),usermodel.uploadImage,homectl.insertData);
 
 route.delete("/deldata/:id",passport.authenticate("jwt",{failureRedirect:"/unauth"}),homectl.deldata)
 

@@ -1,4 +1,6 @@
 const usermodel = require("../model/usermodel");
+const path = require('path')
+ const fs = require('fs')
 
 module.exports.getData = async (req, res) => {
     try {
@@ -16,7 +18,12 @@ module.exports.getData = async (req, res) => {
 
 module.exports.insertData = async (req, res) => {
     try {
-        console.log(req.body);
+        var image = ''
+        if (req.file) {
+            image = await usermodel.imgPath + '/' + req.file.filename;
+        }
+        req.body.userImage = image;
+
         let userData = await usermodel.create(req.body);
         if (userData) {
             return res.status(200).json({ msg: "Data inserted successfully", data: userData });
@@ -30,8 +37,19 @@ module.exports.insertData = async (req, res) => {
 };
 
 module.exports.deldata  = async (req, res) => {
-    try {
-        
+    try 
+    {
+        let singleobj = await usermodel.findById(req.params.id)
+        if(singleobj){
+            try {
+                imgPath = path.join(__dirname,'..',singleobj.filename);
+                fs.unlinkSync(imgPath);
+            }
+            catch (err) {
+                console.log('image not found')
+            }
+        }
+      
        let deldatas = await usermodel.findByIdAndDelete(req.params.id)
         if (deldatas) {
             return res.status(200).json({ msg: "Data inserted successfully" });
